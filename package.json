@@ -1,0 +1,27 @@
+{
+  "name": "aws_s3_photodrop",
+  "description": "This template demonstrates how to make a simple HTTP API with Node.js and Typescript running on AWS Lambda and API Gateway using the Serverless Framework v3",
+  "version": "1.0.0",
+  "dependencies": {
+    "aws-sdk": "^2.1377.0",
+    "dotenv": "^16.0.3",
+    "mime": "^3.0.0",
+    "node-telegram-bot-api": "^0.61.0",
+    "sharp": "^0.32.1",
+    "ts-node": "^10.9.1",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.101",
+    "@types/dotenv": "^8.2.0",
+    "@types/mime": "^3.0.1",
+    "@types/node-telegram-bot-api": "^0.61.6",
+    "@types/uuid": "^9.0.1",
+    "serverless": "^3.21.0",
+    "serverless-dotenv-plugin": "^6.0.0",
+    "serverless-offline": "^12.0.4",
+    "serverless-plugin-typescript": "^2.1.2",
+    "serverless-s3-local": "^0.7.2",
+    "typescript": "^5.0.4"
+  }
+}

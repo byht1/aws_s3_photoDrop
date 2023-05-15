@@ -1,0 +1,32 @@
+{
+  "Records": [
+    {
+      "eventVersion": "2.1",
+      "eventSource": "aws:s3",
+      "awsRegion": "eu-central-1",
+      "eventTime": "2023-05-15T10:35:40.057Z",
+      "eventName": "ObjectCreated:Put",
+      "userIdentity": { "principalId": "AX5TTQPJU2V7U" },
+      "requestParameters": { "sourceIPAddress": "188.163.22.95" },
+      "responseElements": {
+        "x-amz-request-id": "324R6DVEGWYWEWHE",
+        "x-amz-id-2": "IVmjL3yjMKFqqbdWpqGeEiah84jGW8P7Vc2L9mjPoKG6JzSzs4lMTuFnvfSUwxAHrKzd86smggt6oaI9bPjjDtkagrpYrtE7"
+      },
+      "s3": {
+        "s3SchemaVersion": "1.0",
+        "configurationId": "test-s3-trigger-dev-hello-a28cad01aaea06d961a575ba3385121b",
+        "bucket": {
+          "name": "photo-drop-ambda",
+          "ownerIdentity": { "principalId": "AX5TTQPJU2V7U" },
+          "arn": "arn:aws:s3:::photo-drop-ambda"
+        },
+        "object": {
+          "key": "albums/photoDrop2.png",
+          "size": 311659,
+          "eTag": "311006174f15c9471fed824cb8cc6547",
+          "sequencer": "0064620AFBF8D3FE2E"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+service: test-s3-trigger
+frameworkVersion: '3'
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-dotenv-plugin
+  - serverless-offline
+
+package:
+  include:
+    - ./watermarkPhotoDrop.png
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: eu-central-1
+  env:
+    DB_HOST: '${DB_HOST}'
+    AWS_S3_BUCKET: '${AWS_S3_BUCKET}'
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:CreateBucket
+        - s3:DeleteBucket
+        - s3:ListBucket
+        - s3:PutObject
+        - s3:GetObject
+        - s3:DeleteObject
+        - s3:GetBucketPolicy
+        - s3:PutBucketPolicy
+        - s3:DeleteBucketPolicy
+        - s3:PutBucketAcl
+        - s3:PutObjectAcl
+        - s3:GetObjectAcl
+        - s3:GetEncryptionConfiguration
+        - s3:PutEncryptionConfiguration
+      Resource: '*'
+
+functions:
+  hello:
+    handler: src/lambdas/albums.handler
+    timeout: 60
+    events:
+      - s3:
+          bucket: photo-drop-ambda
+          event: s3:ObjectCreated:*
+          existing: true
+          rules:
+            - prefix: albums/temporary
