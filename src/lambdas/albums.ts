@@ -1,8 +1,8 @@
 import { S3Event } from 'aws-lambda'
 // import TelegramBot from 'node-telegram-bot-api'
-import { v4 as uuidv4 } from 'uuid'
-import { TOriginalMetadata, photoService, s3Service } from '../services'
-import { getAlbumIdFromFilePathAndExtension } from '../helpers'
+import { photoService, s3Service } from '../services'
+import { generateFileName, getIdFromFilePathAndExtension } from '../helpers'
+import { albumsRepository, photosRepository } from '../db/repository'
 
 // const bot = new TelegramBot('5691867490:AAFvkE7G9k_H0tyWeXJMU03GPKAJpaDxTmg', { polling: true })
 
@@ -10,34 +10,44 @@ export const handler = async (event: S3Event): Promise<void> => {
   const { key: pathToFile } = event.Records[0]?.s3.object
   try {
     const { Body } = await s3Service.getPhoto(pathToFile)
-    const { albumId, expansion } = getAlbumIdFromFilePathAndExtension(pathToFile)
-    const fileName = `${uuidv4()}.${expansion}`
+    const {
+      id: albumId,
+      expansion,
+      number: numberPhoto = '1',
+    } = getIdFromFilePathAndExtension(pathToFile)
+
+    const album = await albumsRepository.getById(albumId)
+    if (!album) throw new Error()
+
     const buffer = Body as Buffer
+    const generateName = generateFileName(expansion)
+
+    const albumName = album.name
 
     const { original, originalResized, watermark, watermarkResized } =
       await photoService.processAndGeneratePhotoVariants(buffer)
 
     const promise1 = s3Service.uploadFile({
       file: original,
-      fileName,
+      fileName: generateName(),
       rootFolder: `albums/${albumId}/original`,
       isPrivate: true,
     })
     const promise2 = s3Service.uploadFile({
       file: originalResized,
-      fileName: `${uuidv4()}.${expansion}`,
+      fileName: generateName(),
       rootFolder: `albums/${albumId}/original/resized`,
       isPrivate: true,
     })
     const promise3 = s3Service.uploadFile({
       file: watermark,
-      fileName: `${uuidv4()}.${expansion}`,
+      fileName: generateName(),
       rootFolder: `albums/${albumId}/watermark`,
       isPrivate: false,
     })
     const promise4 = s3Service.uploadFile({
       file: watermarkResized,
-      fileName: `${uuidv4()}.${expansion}`,
+      fileName: generateName(),
       rootFolder: `albums/${albumId}/watermark/resized`,
       isPrivate: false,
     })
@@ -48,7 +58,17 @@ export const handler = async (event: S3Event): Promise<void> => {
       promise3,
       promise4,
     ])
-    // await bot.sendMessage(589391825, JSON.stringify(watermarkUrl))
+
+    const photoData = {
+      albumId,
+      name: `${albumName} photo № ${numberPhoto}`,
+      originalUrl,
+      originalResizedUrl,
+      watermarkUrl,
+      watermarkResizedUrl,
+    }
+
+    await photosRepository.addPhotos(photoData)
   } catch (error) {
     throw error
   } finally {

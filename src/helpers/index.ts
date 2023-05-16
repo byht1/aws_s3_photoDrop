@@ -1,2 +1,3 @@
 export * from './getEnv'
-export * from './getAlbumIdFromFilePathAndExtension'
+export * from './getIdFromFilePathAndExtension'
+export * from './generateFileName'
