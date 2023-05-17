@@ -1,4 +1,4 @@
-service: test-s3-trigger2
+service: s3-trigger-photo-drop
 frameworkVersion: '3'
 
 plugins:

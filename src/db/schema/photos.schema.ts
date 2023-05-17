@@ -7,7 +7,7 @@ export const photos = pgTable('photos', {
   albumId: uuid('album_id')
     .notNull()
     .references(() => albums.id),
-  name: varchar('first_name', { length: 50 }).notNull(),
+  name: varchar('name', { length: 50 }).notNull(),
   people: varchar('people').array().default([]),
   originalResizedUrl: varchar('original_resized_url').notNull(),
   watermarkResizedUrl: varchar('watermark_resized_url').notNull(),

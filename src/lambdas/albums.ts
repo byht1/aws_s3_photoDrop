@@ -1,10 +1,7 @@
 import { S3Event } from 'aws-lambda'
-// import TelegramBot from 'node-telegram-bot-api'
 import { photoService, s3Service } from '../services'
 import { generateFileName, getIdFromFilePathAndExtension } from '../helpers'
 import { albumsRepository, photosRepository } from '../db/repository'
-
-// const bot = new TelegramBot('5691867490:AAFvkE7G9k_H0tyWeXJMU03GPKAJpaDxTmg', { polling: true })
 
 export const handler = async (event: S3Event): Promise<void> => {
   const { key: pathToFile } = event.Records[0]?.s3.object
