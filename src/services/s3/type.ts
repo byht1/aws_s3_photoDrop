@@ -5,6 +5,7 @@ export interface IS3Service {
   getPhoto: TGetPhotoFn
   uploadFile: TUploadFileFn
   deleteFile: TDeleteFileFn
+  getNewUrlToPhoto: TGetNewUrlToPhotoFn
 }
 
 export type TGetPhotoFn = (key: string) => Promise<PromiseResult<S3.GetObjectOutput, AWSError>>
@@ -12,6 +13,7 @@ export type TUploadFileFn = (params: TUploadFileFnArgument) => Promise<string>
 export type TDeleteFileFn = (key: string) => Promise<void>
 export type TGenerateParamsS3 = (params: TUploadFileFnArgument) => S3.PutObjectRequest
 export type TUploadToS3 = (params: S3.PutObjectRequest, isPrivate: boolean) => Promise<string>
+export type TGetNewUrlToPhotoFn = (key: string) => Promise<string>
 
 /**
  * Аргументи функції TUploadFileFnArgument для завантаження файлу.

@@ -3,6 +3,8 @@ import { photoService, s3Service } from '../services'
 import { generateFileName, getIdFromFilePathAndExtension } from '../helpers'
 import { albumsRepository, photosRepository } from '../db/repository'
 
+
+
 export const handler = async (event: S3Event): Promise<void> => {
   const { key: pathToFile } = event.Records[0]?.s3.object
   try {
@@ -55,6 +57,8 @@ export const handler = async (event: S3Event): Promise<void> => {
       promise3,
       promise4,
     ])
+
+    
 
     const photoData = {
       albumId,

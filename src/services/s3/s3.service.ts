@@ -3,6 +3,7 @@ import {
   TAcl,
   TDeleteFileFn,
   TGenerateParamsS3,
+  TGetNewUrlToPhotoFn,
   TGetPhotoFn,
   TUploadFileFn,
   TUploadToS3,
@@ -29,6 +30,18 @@ class S3Service implements IS3Service {
 
   deleteFile: TDeleteFileFn = async key => {
     await this.s3.deleteObject({ Bucket: this.BUCKET_NAME, Key: key }).promise()
+  }
+
+  getNewUrlToPhoto: TGetNewUrlToPhotoFn = async key => {
+    const paramsSigned = {
+      Bucket: this.BUCKET_NAME,
+      Key: key,
+      Expires: 604800, // 1 тиждень в секундах
+    }
+
+    const url = this.s3.getSignedUrl('getObject', paramsSigned)
+
+    return url
   }
 
   private generateParamsS3: TGenerateParamsS3 = uploadArgs => {
@@ -60,7 +73,7 @@ class S3Service implements IS3Service {
       const paramsSigned = {
         Bucket: this.BUCKET_NAME,
         Key: s3Response.Key,
-        Expires: null,
+        Expires: 604800, // 1 тиждень в секундах
       }
 
       const url = this.s3.getSignedUrl('getObject', paramsSigned)

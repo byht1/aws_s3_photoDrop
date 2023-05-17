@@ -58,3 +58,10 @@ functions:
           existing: true
           rules:
             - prefix: selfie/temp
+
+  scheduledFunction:
+    handler: src/lambdas/resetPrivateUrl.handler
+    timeout: 60
+    events:
+      - schedule:
+          rate: rate(162 hours)
