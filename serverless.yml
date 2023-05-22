@@ -64,4 +64,4 @@ functions:
     timeout: 60
     events:
       - schedule:
-          rate: rate(162 hours)
+          rate: rate(1 day)
