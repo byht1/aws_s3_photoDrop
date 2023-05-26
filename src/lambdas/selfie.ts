@@ -1,13 +1,13 @@
 import { S3Event } from 'aws-lambda'
 import { s3Service } from '../services'
-import { generateFileName, getIdFromFilePathAndExtension } from '../helpers'
+import { generateFileName, decodeSelfieName } from '../helpers'
 import { usersRepository } from '../db/repository/users/usersRepository'
 
 export const handler = async (event: S3Event): Promise<void> => {
   const { key: pathToFile } = event.Records[0]?.s3.object
   try {
     const { Body } = await s3Service.getPhoto(pathToFile)
-    const { id: userId, expansion } = getIdFromFilePathAndExtension(pathToFile)
+    const { userId, expansion } = decodeSelfieName(pathToFile)
 
     const buffer = Body as Buffer
     const fileName = generateFileName(expansion)()
