@@ -18,7 +18,11 @@ export const handler = async (event: S3Event): Promise<void> => {
       rootFolder: `selfie/${userId}`,
       isPrivate: false,
     })
-    await usersRepository.addSelfie({ userId, url: selfieUrl })
+
+    await Promise.all([
+      usersRepository.addSelfie({ userId, url: selfieUrl }),
+      usersRepository.addAvatar(userId, selfieUrl),
+    ])
   } catch (error) {
     throw error
   } finally {
