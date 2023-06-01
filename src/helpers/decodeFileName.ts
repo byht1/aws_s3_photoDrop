@@ -11,7 +11,8 @@ export const decodePhotoName = (path: string) => {
 }
 
 export const decodeSelfieName = (path: string) => {
-  const [filename] = path.split('/').reverse()
-  const [userId, expansion] = filename.split('.')
-  return { userId, expansion }
+  const regex = /(\d+)_([\w-]+)(\.\w+)/
+  const match = path.match(regex) as RegExpMatchArray
+
+  return { userId: match[2], expansion: match[3] }
 }
