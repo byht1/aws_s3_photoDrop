@@ -30,7 +30,7 @@ class PhotoService implements IPhotoService {
   }
 
   private resizePhoto: TResizePhotoFn = async file => {
-    const newFile = await sharp(file).resize(200, 200)
+    const newFile = await sharp(file).resize(400, 400)
     return newFile.toBuffer()
   }
 
