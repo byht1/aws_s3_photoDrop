@@ -11,21 +11,32 @@ import { join as pathJoin } from 'path'
 class PhotoService implements IPhotoService {
   private WATERMARK_SIZE = 0.9
   private watermarkPhoto = pathJoin(__dirname, '../../../watermarkPhotoDrop.png')
+  private watermarkPhotoMin = pathJoin(__dirname, '../../../watermarkPhotoDropMin.png')
 
   processAndGeneratePhotoVariants: TProcessAndGeneratePhotoVariantsFn = async originalFile => {
-    const watermarkIconPromise = await this.adjustWatermarkToImage(originalFile)
-    const watermarksPromise = this.applyWatermark(originalFile, watermarkIconPromise)
+    const watermarkIconPromise = this.adjustWatermarkToImage(originalFile)
     const originalResizedPromise = this.resizePhoto(originalFile)
-    const [watermarks, originalResized] = await Promise.all([
-      watermarksPromise,
+    const watermarkPhotoMinPromise = sharp(this.watermarkPhotoMin).toBuffer()
+
+    const [watermarkIcon, originalResized, watermarkPhotoMin] = await Promise.all([
+      watermarkIconPromise,
       originalResizedPromise,
+      watermarkPhotoMinPromise,
+    ])
+
+    const watermarksOriginalSizePromise = this.applyWatermark(originalFile, watermarkIcon)
+    const watermarksResizedPromise = this.applyWatermark(originalResized, watermarkPhotoMin)
+
+    const [watermarksOriginalSize, watermarksResized] = await Promise.all([
+      watermarksOriginalSizePromise,
+      watermarksResizedPromise,
     ])
 
     return {
       original: originalFile,
       originalResized,
-      watermark: watermarks.originalSize,
-      watermarkResized: watermarks.minSize,
+      watermark: watermarksOriginalSize,
+      watermarkResized: watermarksResized,
     }
   }
 
@@ -44,7 +55,7 @@ class PhotoService implements IPhotoService {
       ])
       .toBuffer()
 
-    return { originalSize: newFile, minSize: await this.resizePhoto(newFile) }
+    return newFile
   }
 
   private adjustWatermarkToImage: TAdjustWatermarkToImageFn = async originalFile => {

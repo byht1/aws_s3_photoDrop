@@ -9,6 +9,7 @@ plugins:
 package:
   include:
     - ./watermarkPhotoDrop.png
+    - ./watermarkPhotoDropMin.png
 
 # custom:
 #   bucketName: photo-drop-ambda
