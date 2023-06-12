@@ -1,5 +1,3 @@
-import { S3 } from 'aws-sdk'
-
 export interface IPhotoService {
   processAndGeneratePhotoVariants: TProcessAndGeneratePhotoVariantsFn
 }
@@ -12,10 +10,6 @@ export type TAdjustWatermarkToImageFn = (originalFile: Buffer) => Promise<Buffer
 export type TOriginalMetadata = {
   originalWidth: number
   originalHeight: number
-}
-type TApplyWatermarkFnPrivateResponse = {
-  originalSize: Buffer
-  minSize: Buffer
 }
 type TFileResponse = {
   watermark: Buffer
